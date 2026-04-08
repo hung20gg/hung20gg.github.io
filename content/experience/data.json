@@ -1,0 +1,35 @@
+[
+  {
+    "company": "NEU Lab",
+    "total_timeline": "Aug 2024 - Present",
+    "roles": [
+      {
+        "title": "Senior Data Researcher",
+        "employment_type": "Full-time",
+        "timeline": "Jan 2025 - Present",
+        "description": "Led the agentic frameworks team.",
+        "details": "Here are some more detailed notes:\n- Built **robust** pipelines.\n- Managed real-time ingestion.",
+        "tags": ["AI", "SQL"]
+      },
+      {
+        "title": "Data Researcher",
+        "employment_type": "Intern",
+        "timeline": "Aug 2024 - Dec 2024",
+        "description": "Research on advanced agentic systems and structured data retrieval."
+      }
+    ]
+  },
+  {
+    "company": "Tech Startup",
+    "roles": [
+      {
+        "title": "AI Engineer",
+        "employment_type": "Contract",
+        "timeline": "Jan 2024 - Jul 2024",
+        "description": "Maintained and built out full stack implementations of recommendation engines.",
+        "details": "Supported building our core engine.\n- Wrote **FastAPI** microservices.\n- Maintained 99.9% uptime on prediction nodes.",
+        "tags": ["Python", "FastAPI"]
+      }
+    ]
+  }
+]

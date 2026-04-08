@@ -1,40 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light Mode Variables */
+  --bg-color: #ffffff;
+  --text-color: #1a1a2e;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --card-bg: #f1f5f9;
+  --card-hover-bg: #e2e8f0;
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --accent-glow: rgba(0, 112, 243, 0.1);
+  --gradient-name: linear-gradient(90deg, #0070f3, #00c6ff);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+[data-theme='dark'] {
+  /* Dark Mode Variables */
+  --bg-color: #0b0f19;
+  --text-color: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #1e293b;
+  --card-bg: rgba(17, 24, 39, 0.5);
+  --card-hover-bg: rgba(31, 41, 55, 0.9);
+  --nav-bg: rgba(11, 15, 25, 0.8);
+  --accent-glow: rgba(56, 189, 248, 0.1);
+  --gradient-name: linear-gradient(90deg, #38bdf8, #818cf8);
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1.6;
 }
 
 a {
@@ -42,8 +45,333 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+/* Gradient Name specific class */
+.name-gradient {
+  background: var(--gradient-name);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Header/Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  width: 100%;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--text-color);
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+  background-color: var(--card-hover-bg);
+}
+
+/* Snap Scroll Architecture */
+.snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  /* Hide scrollbar for a cleaner commercial feel */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.snap-container::-webkit-scrollbar {
+  display: none;
+}
+
+.snap-section {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.snap-content {
+  z-index: 10;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  width: 100%;
+}
+
+.snap-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.snap-desc {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 800px;
+  margin-bottom: 2rem;
+}
+
+/* Background Variations for Panels */
+.bg-variant-1 {
+  background: radial-gradient(circle at right top, var(--accent-glow) 0%, transparent 40%);
+}
+.bg-variant-2 {
+  background: radial-gradient(circle at left bottom, var(--accent-glow) 0%, transparent 50%);
+}
+.bg-variant-3 {
+  background: linear-gradient(135deg, transparent 70%, var(--accent-glow));
+}
+
+/* General Layouts */
+.section-full {
+  min-height: 80vh;
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background-color: var(--card-bg);
+  backdrop-filter: blur(5px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px var(--accent-glow);
+  background-color: var(--card-hover-bg);
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--border-color);
+  padding: 3rem 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 4rem;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
   }
 }
+
+.avatar-main {
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.6s ease;
+  cursor: pointer;
+}
+
+.avatar-wrapper:hover .avatar-main {
+  transform: scale(1.08);
+  box-shadow: 0 0 60px var(--accent-glow) !important;
+}
+
+.ripple-ring {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-glow);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(1);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1), opacity 0.6s ease, border-color 0.6s ease;
+}
+
+.avatar-wrapper:hover .ripple-1 {
+  transform: scale(1.15);
+  opacity: 0.6;
+  border-color: #0070f3;
+  transition-delay: 0.05s;
+}
+
+.avatar-wrapper:hover .ripple-2 {
+  transform: scale(1.3);
+  opacity: 0.4;
+  border-color: #00c6ff;
+  transition-delay: 0.1s;
+}
+
+.avatar-wrapper:hover .ripple-3 {
+  transform: scale(1.45);
+  opacity: 0.2;
+  border-color: #38bdf8;
+  transition-delay: 0.15s;
+}
+
+.avatar-wrapper:hover .ripple-4 {
+  transform: scale(1.6);
+  opacity: 0.1;
+  border-color: #38bdf8;
+  transition-delay: 0.2s;
+}
+
+.ripple-1 { transition-delay: 0.15s; }
+.ripple-2 { transition-delay: 0.1s; }
+.ripple-3 { transition-delay: 0.05s; }
+.ripple-4 { transition-delay: 0s; }
+
+/* Background Geometries */
+.geometry-wrapper {
+  cursor: pointer;
+}
+
+.geometry-main {
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.6s ease, background-color 0.6s ease, border-color 0.6s ease;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.05); /* very faded baseline */
+}
+
+.geom-dot {
+  background-color: rgba(56, 189, 248, 0.15); /* fade dot */
+}
+
+.geom-rect {
+  border: 2px solid rgba(56, 189, 248, 0.3); /* fade rect */
+  background-color: transparent;
+}
+
+.geometry-wrapper:hover .geometry-main {
+  transform: scale(1.15) !important;
+  box-shadow: 0 0 45px var(--accent-glow) !important;
+}
+
+.geometry-wrapper:hover .geom-dot {
+  background-color: rgba(56, 189, 248, 0.6) !important; /* light up on hover */
+}
+
+.geometry-wrapper:hover .geom-rect {
+  border-color: rgba(56, 189, 248, 0.8) !important; /* light up on hover */
+}
+
+/* Background Geometry Specific Ripples using Padding instead of Scale */
+.ripple-geom {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  opacity: 0;
+  border: 1.5px solid var(--accent-glow);
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1);
+}
+
+.ripple-dot {
+  border-radius: 50%;
+}
+
+.ripple-rect-1, .ripple-rect-2, .ripple-rect-3 {
+  border-radius: 6px;
+}
+
+.geometry-wrapper:hover .ripple-geom-1 {
+  top: -8px; bottom: -8px; left: -8px; right: -8px;
+  opacity: 0.7;
+  border-color: #38bdf8;
+  transition-delay: 0.05s;
+}
+
+.geometry-wrapper:hover .ripple-rect-1 {
+  border-radius: 10px; /* slightly less curved */
+}
+
+.geometry-wrapper:hover .ripple-geom-2 {
+  top: -16px; bottom: -16px; left: -16px; right: -16px;
+  opacity: 0.45;
+  border-color: #38bdf8;
+  transition-delay: 0.1s;
+}
+
+.geometry-wrapper:hover .ripple-rect-2 {
+  border-radius: 14px; /* somewhat less curved instead of strict 24px */
+}
+
+.geometry-wrapper:hover .ripple-geom-3 {
+  top: -24px; bottom: -24px; left: -24px; right: -24px;
+  opacity: 0.2;
+  border-color: #38bdf8;
+  transition-delay: 0.15s;
+}
+
+.geometry-wrapper:hover .ripple-rect-3 {
+  border-radius: 18px; /* harder squared edge retained at extreme boundary */
+}
+
+/* Reverse Delays */
+.ripple-geom-1 { transition-delay: 0.1s; }
+.ripple-geom-2 { transition-delay: 0.05s; }
+.ripple-geom-3 { transition-delay: 0s; }

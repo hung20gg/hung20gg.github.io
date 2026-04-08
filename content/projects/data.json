@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Financial QA System",
+    "description": "An automated Q&A retrieval service leveraging financial databases.",
+    "link": "https://github.com/",
+    "tags": ["PostgreSQL", "LLM", "RAG"]
+  },
+  {
+    "name": "Personal Portfolio",
+    "description": "A dynamic Next.js application leveraging file-based CMS routing.",
+    "link": "#",
+    "tags": ["Next.js", "React"]
+  }
+]
