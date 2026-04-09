@@ -14,8 +14,8 @@ const VectorField: React.FC<VectorFieldProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Smoothed real cursor
-  const mouseRef = useRef({ x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false });
+  // Spring-physics cursor — vx/vy drive x/y toward targetX/Y with overshoot
+  const mouseRef = useRef({ x: -1000, y: -1000, vx: 0, vy: 0, targetX: -1000, targetY: -1000, active: false });
 
   // Spring-physics scroll animation — purely vertical
   // Each scroll event fires an impulse into `velocity`.
@@ -77,18 +77,24 @@ const VectorField: React.FC<VectorFieldProps> = ({
     };
 
     // ── Scroll → spring impulse ─────────────────────────────────────────────
-    const SPRING        = 2.0;  // restoring force constant — lower = slower return
-    const FRICTION      = 0.88; // velocity multiplier per frame — lower = faster damping
-    const MAX_AMP       = 160;  // max vertical displacement (px)
-    const IMPULSE_SCALE = 14;   // scroll-delta px → velocity px/s
+    const SPRING = 1.0;  // restoring force constant — lower = slower return
+    const FRICTION = 0.68; // velocity multiplier per frame — lower = faster damping
+    const MAX_AMP = 200;  // max vertical displacement (px)
+    const IMPULSE_SCALE = 30;   // scroll-delta px → velocity px/s
 
-    const handleScroll = () => {
+    const handleScroll = (e: Event) => {
       const sa = scrollAnim.current;
       const m  = mouseRef.current;
 
-      const scrollY = window.scrollY;
-      const delta = scrollY - sa.lastScrollY;
-      sa.lastScrollY = scrollY;
+      // For element-level scroll (snap-container), use scrollTop.
+      // For window-level scroll, fall back to window.scrollY.
+      const target = e.currentTarget as HTMLElement | Window;
+      const currentScrollY = target instanceof Window
+        ? window.scrollY
+        : (target as HTMLElement).scrollTop;
+
+      const delta = currentScrollY - sa.lastScrollY;
+      sa.lastScrollY = currentScrollY;
 
       if (!m.active || delta === 0) return;
 
@@ -103,17 +109,30 @@ const VectorField: React.FC<VectorFieldProps> = ({
 
     // ── Draw loop ───────────────────────────────────────────────────────────
     let lastFrameTime = 0;
+    // Brightness state — persists across rAF frames
+    let prevSpeed  = 0;    // speed from the previous frame (for accel detection)
+    let brightness = 1.0;  // current smoothed brightness multiplier
+
     const draw = (time: number) => {
-      const m  = mouseRef.current;
+      const m = mouseRef.current;
       const sa = scrollAnim.current;
 
       // Real dt capped at 50 ms to avoid big jumps on tab-switch / focus loss
       const dt = lastFrameTime ? Math.min((time - lastFrameTime) / 1000, 0.05) : 1 / 60;
       lastFrameTime = time;
 
-      // 1. Interpolate real mouse (smooth lag)
-      m.x += (m.targetX - m.x) * 0.12;
-      m.y += (m.targetY - m.y) * 0.12;
+      // 1. Spring-physics cursor (same system as scroll)
+      //    Spring pulls x/y toward targetX/Y; friction bleeds overshoot.
+      //    Fast moves → spotlight overshoots → springs back.
+      const MOUSE_SPRING = 7;   // restoring force — higher = snappier
+      const MOUSE_FRICTION = 0.46; // velocity multiplier/frame — lower = quicker settle
+
+      m.vx += -MOUSE_SPRING * (m.x - m.targetX);
+      m.vy += -MOUSE_SPRING * (m.y - m.targetY);
+      m.vx *= MOUSE_FRICTION;
+      m.vy *= MOUSE_FRICTION;
+      m.x += m.vx * dt;
+      m.y += m.vy * dt;
 
       // 2. Spring physics step
       let offsetY = 0;
@@ -127,39 +146,64 @@ const VectorField: React.FC<VectorFieldProps> = ({
 
         // Hit cap → reflect velocity (one bounce) and lock new impulses
         if (Math.abs(sa.offsetY) >= MAX_AMP) {
-          sa.offsetY  = Math.sign(sa.offsetY) * MAX_AMP;
+          sa.offsetY = Math.sign(sa.offsetY) * MAX_AMP;
           sa.velocity = -sa.velocity * 0.55; // reflect with ~45% energy loss
-          sa.locked   = true;
+          sa.locked = true;
         }
 
         offsetY = sa.offsetY;
 
         // Fully settled — clean up
         if (Math.abs(sa.offsetY) < 0.5 && Math.abs(sa.velocity) < 1) {
-          sa.offsetY  = 0;
+          sa.offsetY = 0;
           sa.velocity = 0;
-          sa.active   = false;
-          sa.locked   = false;
+          sa.active = false;
+          sa.locked = false;
         }
       }
 
-      // 3. Effective cursor: real mouse + vertical spring offset (X unchanged)
-      const effectiveX       = m.x;
-      const effectiveY       = m.y + offsetY;
-      const effectiveTargetX = m.targetX;
-      const effectiveTargetY = m.targetY + offsetY;
+      // 3. Brightness — brighter while accelerating, faded while decelerating
+      //    Total spring speed (mouse + scroll) signals which phase we're in.
+      const mouseSpeed  = Math.sqrt(m.vx * m.vx + m.vy * m.vy);
+      const scrollSpeed = Math.abs(sa.velocity);
+      const totalSpeed  = mouseSpeed + scrollSpeed;
+
+      const isAccelerating = totalSpeed > prevSpeed + 0.5; // small deadband
+      prevSpeed = totalSpeed;
+
+      // Target brightness: phase 1 = bright, phase 2 = faded, idle = 1.0
+      const atRest = totalSpeed < 2;
+      const targetBrightness = atRest
+        ? 1.0
+        : isAccelerating
+          ? 1.0 + Math.min(totalSpeed / 300, 1) * 1.2  // up to 2.2×
+          : Math.max(0.2, 1.0 - Math.min(totalSpeed / 200, 1) * 0.8); // down to 0.2×
+
+      // Smoothly chase the target (fast chase up, slower fade back)
+      const chaseSpeed = isAccelerating ? 0.25 : 0.08;
+      brightness += (targetBrightness - brightness) * chaseSpeed;
+
+      // 4. Effective cursor: real mouse + vertical spring offset (X unchanged)
+      //    Both the spotlight CENTER and the ROTATION TARGET use the spring
+      //    position (m.x / m.y) — not the raw cursor — so moving the cursor
+      //    during a scroll animation doesn't cause an instant rotation snap.
+      //    They're both chasing the same point in sync.
+      const effectiveX = m.x;
+      const effectiveY = m.y + offsetY;
+      const effectiveTargetX = m.x;
+      const effectiveTargetY = m.y + offsetY;
 
       ctx.clearRect(0, 0, width, height);
 
       if (m.active) {
         const startCol = Math.max(0, Math.floor((effectiveX - range) / density));
-        const endCol   = Math.min(Math.ceil(width  / density), Math.ceil((effectiveX + range) / density));
+        const endCol = Math.min(Math.ceil(width / density), Math.ceil((effectiveX + range) / density));
         const startRow = Math.max(0, Math.floor((effectiveY - range) / density));
-        const endRow   = Math.min(Math.ceil(height / density), Math.ceil((effectiveY + range) / density));
+        const endRow = Math.min(Math.ceil(height / density), Math.ceil((effectiveY + range) / density));
 
         ctx.strokeStyle = currentColorRef.current;
-        ctx.lineWidth   = 1.5;
-        ctx.lineCap     = 'round';
+        ctx.lineWidth = 1.5;
+        ctx.lineCap = 'round';
 
         for (let r = startRow; r <= endRow; r++) {
           for (let c = startCol; c <= endCol; c++) {
@@ -172,7 +216,7 @@ const VectorField: React.FC<VectorFieldProps> = ({
             const rangeSq = range * range;
 
             if (distSq < rangeSq) {
-              const dist    = Math.sqrt(distSq);
+              const dist = Math.sqrt(distSq);
               const opacity = Math.pow(1 - dist / range, 2);
 
               const dxRot = effectiveTargetX - px;
@@ -180,11 +224,11 @@ const VectorField: React.FC<VectorFieldProps> = ({
               let angle = Math.atan2(dyRot, dxRot);
 
               // Symmetric normalisation — prevents 180° flip glitches
-              if (angle > Math.PI / 2)  angle -= Math.PI;
+              if (angle > Math.PI / 2) angle -= Math.PI;
               else if (angle < -Math.PI / 2) angle += Math.PI;
 
               ctx.save();
-              ctx.globalAlpha = opacity;
+              ctx.globalAlpha = Math.min(1, opacity * brightness);
               ctx.translate(px, py);
               ctx.rotate(angle);
 
