@@ -10,11 +10,31 @@ interface VectorFieldProps {
 const VectorField: React.FC<VectorFieldProps> = ({
   density = 35,
   color,
-  range = 300 // Increased visible area as requested
+  range = 300
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Smoothed real cursor
   const mouseRef = useRef({ x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false });
-  const lastUpdateRef = useRef(0);
+
+  // Spring-physics scroll animation — purely vertical
+  // Each scroll event fires an impulse into `velocity`.
+  // Every rAF frame applies:
+  //   spring force = -SPRING * offsetY   (pulls back to 0)
+  //   friction     = FRICTION per frame  (bleeds energy)
+  //   offsetY     += velocity * dt
+  //
+  // When |offsetY| ≥ MAX_AMP:
+  //   velocity is reflected (single bounce) and locked — no more scroll
+  //   impulses accepted until the spring fully settles at 0.
+  const scrollAnim = useRef({
+    offsetY: 0,    // current vertical displacement (px)
+    velocity: 0,   // current velocity (px/s)
+    active: false,
+    locked: false, // true after the MAX bounce — blocks new impulses
+    lastScrollY: 0,
+  });
+
   const currentColorRef = useRef(color || '#38bdf8');
 
   useEffect(() => {
@@ -27,6 +47,7 @@ const VectorField: React.FC<VectorFieldProps> = ({
     let width = 0;
     let height = 0;
 
+    // ── Resize ──────────────────────────────────────────────────────────────
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
       width = rect.width;
@@ -37,68 +58,129 @@ const VectorField: React.FC<VectorFieldProps> = ({
       ctx.scale(dpr, dpr);
     };
 
+    // ── Theme colour observer ───────────────────────────────────────────────
     const updateColor = () => {
-      // Use document.body because data-theme is applied there
-      const bodyStyles = getComputedStyle(document.body);
-      const computed = bodyStyles.getPropertyValue('--vector-field-color').trim();
-      
-      // Log to ensure we're getting the right value if needed (optional)
+      const computed = getComputedStyle(document.body).getPropertyValue('--vector-field-color').trim();
       currentColorRef.current = color || computed || '#38bdf8';
     };
-
     const observer = new MutationObserver(updateColor);
     observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
     updateColor();
 
+    // ── Real mouse (window-level so canvas pointer-events:none is fine) ─────
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current.targetX = e.clientX - rect.left;
-      mouseRef.current.targetY = e.clientY - rect.top;
-      mouseRef.current.active = true;
+      const m = mouseRef.current;
+      m.targetX = e.clientX - rect.left;
+      m.targetY = e.clientY - rect.top;
+      m.active = true;
     };
 
+    // ── Scroll → spring impulse ─────────────────────────────────────────────
+    const SPRING        = 2.0;  // restoring force constant — lower = slower return
+    const FRICTION      = 0.88; // velocity multiplier per frame — lower = faster damping
+    const MAX_AMP       = 160;  // max vertical displacement (px)
+    const IMPULSE_SCALE = 14;   // scroll-delta px → velocity px/s
+
+    const handleScroll = () => {
+      const sa = scrollAnim.current;
+      const m  = mouseRef.current;
+
+      const scrollY = window.scrollY;
+      const delta = scrollY - sa.lastScrollY;
+      sa.lastScrollY = scrollY;
+
+      if (!m.active || delta === 0) return;
+
+      // Once bounced off MAX, ignore further scroll until fully settled
+      if (sa.locked) return;
+
+      // Clamp per-event impulse so a single huge scroll doesn't teleport
+      const impulse = Math.max(-90, Math.min(90, delta * IMPULSE_SCALE));
+      sa.velocity += impulse;
+      sa.active = true;
+    };
+
+    // ── Draw loop ───────────────────────────────────────────────────────────
+    let lastFrameTime = 0;
     const draw = (time: number) => {
-      // 1. Interpolate mouse for the spotlight lag effect (0.1s feel)
-      const mouse = mouseRef.current;
-      mouse.x += (mouse.targetX - mouse.x) * 0.15;
-      mouse.y += (mouse.targetY - mouse.y) * 0.15;
+      const m  = mouseRef.current;
+      const sa = scrollAnim.current;
+
+      // Real dt capped at 50 ms to avoid big jumps on tab-switch / focus loss
+      const dt = lastFrameTime ? Math.min((time - lastFrameTime) / 1000, 0.05) : 1 / 60;
+      lastFrameTime = time;
+
+      // 1. Interpolate real mouse (smooth lag)
+      m.x += (m.targetX - m.x) * 0.12;
+      m.y += (m.targetY - m.y) * 0.12;
+
+      // 2. Spring physics step
+      let offsetY = 0;
+      if (sa.active) {
+        // Spring pulls back to centre
+        sa.velocity += -SPRING * sa.offsetY;
+        // Friction bleeds kinetic energy
+        sa.velocity *= FRICTION;
+        // Integrate position
+        sa.offsetY += sa.velocity * dt;
+
+        // Hit cap → reflect velocity (one bounce) and lock new impulses
+        if (Math.abs(sa.offsetY) >= MAX_AMP) {
+          sa.offsetY  = Math.sign(sa.offsetY) * MAX_AMP;
+          sa.velocity = -sa.velocity * 0.55; // reflect with ~45% energy loss
+          sa.locked   = true;
+        }
+
+        offsetY = sa.offsetY;
+
+        // Fully settled — clean up
+        if (Math.abs(sa.offsetY) < 0.5 && Math.abs(sa.velocity) < 1) {
+          sa.offsetY  = 0;
+          sa.velocity = 0;
+          sa.active   = false;
+          sa.locked   = false;
+        }
+      }
+
+      // 3. Effective cursor: real mouse + vertical spring offset (X unchanged)
+      const effectiveX       = m.x;
+      const effectiveY       = m.y + offsetY;
+      const effectiveTargetX = m.targetX;
+      const effectiveTargetY = m.targetY + offsetY;
 
       ctx.clearRect(0, 0, width, height);
 
-      if (mouse.active) {
-        // 2. Optimization: Calculate bounding box of visible area
-        const startCol = Math.max(0, Math.floor((mouse.x - range) / density));
-        const endCol = Math.min(Math.ceil(width / density), Math.ceil((mouse.x + range) / density));
-        const startRow = Math.max(0, Math.floor((mouse.y - range) / density));
-        const endRow = Math.min(Math.ceil(height / density), Math.ceil((mouse.y + range) / density));
+      if (m.active) {
+        const startCol = Math.max(0, Math.floor((effectiveX - range) / density));
+        const endCol   = Math.min(Math.ceil(width  / density), Math.ceil((effectiveX + range) / density));
+        const startRow = Math.max(0, Math.floor((effectiveY - range) / density));
+        const endRow   = Math.min(Math.ceil(height / density), Math.ceil((effectiveY + range) / density));
 
         ctx.strokeStyle = currentColorRef.current;
-        ctx.lineWidth = 1.5;
-        ctx.lineCap = 'round';
+        ctx.lineWidth   = 1.5;
+        ctx.lineCap     = 'round';
 
-        // 3. Only loop through visible "matrix" items
         for (let r = startRow; r <= endRow; r++) {
           for (let c = startCol; c <= endCol; c++) {
             const px = c * density;
             const py = r * density;
 
-            // Distance calculation uses interpolated "laggy" mouse for the spotlight feel
-            const dxDist = mouse.x - px;
-            const dyDist = mouse.y - py;
+            const dxDist = effectiveX - px;
+            const dyDist = effectiveY - py;
             const distSq = dxDist * dxDist + dyDist * dyDist;
             const rangeSq = range * range;
 
             if (distSq < rangeSq) {
-              const dist = Math.sqrt(distSq);
+              const dist    = Math.sqrt(distSq);
               const opacity = Math.pow(1 - dist / range, 2);
 
-              // Rotation uses the actual target "newest" mouse position as requested
-              const dxRot = mouse.targetX - px;
-              const dyRot = mouse.targetY - py;
+              const dxRot = effectiveTargetX - px;
+              const dyRot = effectiveTargetY - py;
               let angle = Math.atan2(dyRot, dxRot);
 
-              // Normalize angle for symmetric line segments
-              if (angle > Math.PI / 2) angle -= Math.PI;
+              // Symmetric normalisation — prevents 180° flip glitches
+              if (angle > Math.PI / 2)  angle -= Math.PI;
               else if (angle < -Math.PI / 2) angle += Math.PI;
 
               ctx.save();
@@ -106,7 +188,6 @@ const VectorField: React.FC<VectorFieldProps> = ({
               ctx.translate(px, py);
               ctx.rotate(angle);
 
-              // Draw small line
               ctx.beginPath();
               ctx.moveTo(-7, 0);
               ctx.lineTo(7, 0);
@@ -121,14 +202,23 @@ const VectorField: React.FC<VectorFieldProps> = ({
       rafId = requestAnimationFrame(draw);
     };
 
+    // ── Attach ──────────────────────────────────────────────────────────────
     window.addEventListener('resize', resize);
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Also catch scroll on snap-containers (not window-level scroll)
+    const snapContainers = document.querySelectorAll<HTMLElement>('.snap-container');
+    snapContainers.forEach(el => el.addEventListener('scroll', handleScroll, { passive: true }));
+
     resize();
     rafId = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      snapContainers.forEach(el => el.removeEventListener('scroll', handleScroll));
       observer.disconnect();
       cancelAnimationFrame(rafId);
     };
@@ -143,7 +233,7 @@ const VectorField: React.FC<VectorFieldProps> = ({
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        zIndex: -1
+        zIndex: 0
       }}
     />
   );

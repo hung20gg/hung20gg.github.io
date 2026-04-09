@@ -71,7 +71,14 @@ export default function PageBackdrop({ seed }: { seed: string }) {
   const shapes = configs[seed] || [];
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1, pointerEvents: 'none', overflow: 'hidden' }}>
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      // zIndex 0 so children with pointerEvents:auto are actually reachable by the mouse.
+      // The wrapper itself is pointer-events:none so it never blocks page content.
+      zIndex: 0,
+      pointerEvents: 'none',
+      overflow: 'hidden'
+    }}>
 
       {/* Global Vector Field Background */}
       <VectorField density={35} range={260} />
@@ -88,7 +95,11 @@ export default function PageBackdrop({ seed }: { seed: string }) {
             width: shape.width,
             height: shape.height,
             transform: `rotate(${shape.rotate || '0deg'})`,
-            pointerEvents: 'auto'
+            // Expanded hit area so small shapes are easy to hover
+            padding: '12px',
+            margin: '-12px',
+            pointerEvents: 'auto',
+            zIndex: 1,
           }}>
             {/* Ripples with smart corner rounding mapped to shape types */}
             <div className={`ripple-ring ripple-geom ripple-geom-1 ${isDot ? 'ripple-dot' : 'ripple-rect-1'}`} />

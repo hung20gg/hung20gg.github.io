@@ -142,6 +142,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Snap Scroll Architecture */
 .snap-container {
+  position: relative;
+  z-index: 1;
   height: 100vh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
@@ -215,6 +217,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* General Layouts */
 .section-full {
+  position: relative;
+  z-index: 1;
   min-height: 80vh;
   padding-top: 6rem;
   padding-bottom: 4rem;
