@@ -1,6 +1,7 @@
 import { getLocalData } from '@/lib/data';
 import PageBackdrop from '@/components/PageBackdrop';
 import ExpandableCard from '@/components/ExpandableCard';
+import Footer from '@/components/Footer';
 
 export default function ResearchPage() {
   const data: any[] = getLocalData('research/data.json', []);
@@ -84,8 +85,8 @@ export default function ResearchPage() {
                           backgroundColor: brandColor || 'var(--text-color)',
                           boxShadow: '0 0 10px var(--brand-color-glow, var(--accent-glow))'
                         }} />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                           <h3 style={{ fontSize: '1.3rem', color: 'var(--text-color)' }}>{role.title}</h3>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.60rem' }}>
+                           <h3 style={{ fontSize: '1.3rem', color: 'var(--text-color)', margin: 0 }}>{role.title}</h3>
                         </div>
                       </div>
                     }
@@ -101,6 +102,8 @@ export default function ResearchPage() {
           )})}
         </div>
       )}
+      
+      <Footer />
     </main>
   );
 }

@@ -4,27 +4,31 @@
         "authors": "Nguyen, H. Q., Trinh, A. P., Mai, H. P. Q., & Trinh, P. T.",
         "venue": "Proceedings of the 18th International Natural Language Generation Conference",
         "year": "2025",
-        "link": "https://aclanthology.org/2025.inlg-main.27/"
+        "link": "https://aclanthology.org/2025.inlg-main.27/",
+        "ranking": "CORE B"
     },
     {
         "title": "NEU-ESC: A comprehensive Vietnamese dataset for educational sentiment analysis and topic classification",
         "authors": "Nguyen, H. Q., Mai, H. Q. P., Duong, G. P., Nguyen, H. H. T., Huan, V., Tien, N. C., & Thien, L. V.",
         "venue": "IEICE Proceedings Series, 92, 153–156",
         "year": "2024",
-        "link": "https://doi.org/10.34385/proc.92.A4L-B5"
+        "link": "https://doi.org/10.34385/proc.92.A4L-B5",
+        "ranking": ""
     },
     {
         "title": "Efficient Vietnamese Name Detection Using Highly Discriminative N-Grams",
         "authors": "Luu, T., Mai, P. Q. H., Dao, T. T. P., Nguyen, Q. H., & Pham, X. L.",
         "venue": "Asian Conference on Intelligent Information and Database Systems, 332–347",
         "year": "2025",
-        "link": "https://doi.org/10.1007/978-981-96-6005-6_24"
+        "link": "https://doi.org/10.1007/978-981-96-6005-6_24",
+        "ranking": "CORE B"
     },
     {
         "title": "Enhancing educational evaluation through predictive student assessment modeling",
         "authors": "Pham, X. L., Mai, P. Q. H., Nguyen, Q. H., Pham, T., Nguyen, T. H. H., & Nguyen, T. H.",
         "venue": "Computers and Education: Artificial Intelligence, 6, 100244",
         "year": "2024",
-        "link": "https://doi.org/10.1016/j.caeai.2024.100244"
+        "link": "https://doi.org/10.1016/j.caeai.2024.100244",
+        "ranking": "Q1 Scopus"
     }
 ]

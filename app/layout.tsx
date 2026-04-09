@@ -19,7 +19,6 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <Navbar />
         {children}
-        <Footer />
       </body>
     </html>
   );

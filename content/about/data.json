@@ -1,7 +1,40 @@
 {
   "title": "About Me",
-  "paragraphs": [
-    "I am a student specializing in intelligent systems blending LLMs with robust data pipelines.",
-    "My goal is to drive impact by deploying Agentic AI into real world workflows."
+  "overview": {
+    "paragraphs": [
+      "I am specialized in intelligent systems blending LLMs.",
+      "My goal is to drive impact by deploying Agentic AI into real world workflows. I focus on building systems that can reason, and support real-world decision making.",
+      "I am open to doing research projects outside these areas as well."
+    ],
+    "research_interests": [
+      "Agentic AI & Multi-Agent Systems",
+      "Large Language Models (LLMs) and Distillation",
+      "Financial Data Analytics & Automation",
+      "Interactive AI Interfaces"
+    ]
+  },
+  "awards": {
+    "scholarships": [
+      {
+        "name": "NEU Excellent Scholarship",
+        "detail": "Academic excellence scholarship for top performing students."
+      },
+      {
+        "name": "VINGROUP Companion Scholarship",
+        "detail": "Scholarship for top performing students issued by VinGroup."
+      }
+    ],
+    "prizes": [
+      {
+        "name": "National Olympiad in Informatic for University Students",
+        "detail": "Silver Medal (non-specialized group)"
+      }
+    ]
+  },
+  "certificates": [
+    {
+      "name": "IELTS",
+      "detail": "Overall Band Score: 7.5"
+    }
   ]
 }

@@ -1,5 +1,6 @@
 import { getLocalData } from '@/lib/data';
 import PageBackdrop from '@/components/PageBackdrop';
+import Footer from '@/components/Footer';
 
 export default function ContactPage() {
   const data = getLocalData('contact/data.json', { text: "Please add contact details." });
@@ -14,6 +15,8 @@ export default function ContactPage() {
         {data.linkedin && <p><strong>LinkedIn:</strong> <a href={data.linkedin} target="_blank">{data.linkedin}</a></p>}
         {data.github && <p><strong>GitHub:</strong> <a href={data.github} target="_blank">{data.github}</a></p>}
       </div>
+      
+      <Footer />
     </main>
   );
 }

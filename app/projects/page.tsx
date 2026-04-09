@@ -1,6 +1,7 @@
 import { getLocalData } from '@/lib/data';
 import ExpandableCard from '@/components/ExpandableCard';
 import PageBackdrop from '@/components/PageBackdrop';
+import Footer from '@/components/Footer';
 
 export default function ProjectsPage() {
   const data: any[] = getLocalData('projects/data.json', []);
@@ -31,6 +32,8 @@ export default function ProjectsPage() {
           ))}
         </div>
       )}
+      
+      <Footer />
     </main>
   );
 }

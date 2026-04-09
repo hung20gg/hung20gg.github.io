@@ -8,7 +8,8 @@
                 "title": "Research Assistant",
                 "topic": "Agentic AI and Text2SQL for financial applications",
                 "timeline": "Oct 2024 - Present",
-                "details": "- Conduct research on Agentic AI, focusing on how large language models plan and perform actions.\n- Study state-of-the-art **Text2SQL** methods and explore their applications in the financial sector under limited resource conditions."
+                "details": "- Conduct research on Agentic AI, focusing on how large language models plan and perform actions.\n- Study state-of-the-art **Text2SQL** methods and explore their applications in the financial sector under limited resource conditions.",
+                "tags": ["Agentic AI", "Text2SQL", "Finance"]
             }
         ]
     },
@@ -20,7 +21,8 @@
                 "title": "Research Assistant",
                 "topic": "Learning analytics and educational data mining",
                 "timeline": "May 2023 - May 2024",
-                "details": "- Analyzed student behavior on online learning platforms to understand its impact on final learning outcomes.\n- Researched data mining approaches to detect and collect Vietnamese lectures available across global online platforms."
+                "details": "- Analyzed student behavior on online learning platforms to understand its impact on final learning outcomes.\n- Researched data mining approaches to detect and collect Vietnamese lectures available across global online platforms.",
+                "tags": ["EdTech", "Data Mining", "Learning Analytics"]
             }
         ]
     }

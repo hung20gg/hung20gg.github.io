@@ -1,5 +1,7 @@
 import { getLocalData } from '@/lib/data';
 import PageBackdrop from '@/components/PageBackdrop';
+import Link from 'next/link';
+import Footer from '@/components/Footer';
 
 export default function PublicationsPage() {
   const data: any[] = getLocalData('publications/data.json', []);
@@ -25,8 +27,25 @@ export default function PublicationsPage() {
               }}>
                 {item.year || "2025"}
               </div>
-              <div>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>{item.title}</h3>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                  <h3 style={{ fontSize: '1.3rem', margin: 0, lineHeight: '1.2' }}>{item.title}</h3>
+                  {item.ranking && (
+                    <span className="card-tag" style={{
+                      fontSize: '0.85rem',
+                      padding: '0.2rem 0.75rem',
+                      border: '1px solid #4b5563',
+                      borderRadius: '20px',
+                      color: 'var(--text-muted)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      lineHeight: '1'
+                    }}>
+                      {item.ranking}
+                    </span>
+                  )}
+                </div>
                 <p style={{ fontStyle: 'italic', marginBottom: '0.5rem' }}>{item.authors}</p>
                 <p style={{ marginBottom: '1rem' }}>{item.venue}</p>
                 {item.link && (
@@ -39,6 +58,8 @@ export default function PublicationsPage() {
           ))}
         </div>
       )}
+      
+      <Footer />
     </main>
   );
 }

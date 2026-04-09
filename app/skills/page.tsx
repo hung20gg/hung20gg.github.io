@@ -1,5 +1,6 @@
 import { getLocalData } from '@/lib/data';
 import PageBackdrop from '@/components/PageBackdrop';
+import Footer from '@/components/Footer';
 
 export default function SkillsPage() {
   const data = getLocalData('skills/data.json', {
@@ -61,6 +62,8 @@ export default function SkillsPage() {
            {renderBadgeList(data.tools, 2)}
         </section>
       </div>
+      
+      <Footer />
     </main>
   );
 }

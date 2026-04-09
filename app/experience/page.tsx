@@ -1,6 +1,7 @@
 import { getLocalData } from '@/lib/data';
 import ExpandableCard from '@/components/ExpandableCard';
 import PageBackdrop from '@/components/PageBackdrop';
+import Footer from '@/components/Footer';
 
 export default function ExperiencePage() {
   const data: any[] = getLocalData('experience/data.json', []);
@@ -117,6 +118,8 @@ export default function ExperiencePage() {
           })}
         </div>
       )}
+      
+      <Footer />
     </main>
   );
 }

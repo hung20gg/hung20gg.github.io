@@ -1,11 +1,11 @@
-'use client';
 import Link from 'next/link';
 import Avatar from '@/components/Avatar';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
     <main className="snap-container">
-      
+
       {/* 1. Hero Panel */}
       <section className="snap-section bg-variant-1">
         <div className="snap-content" style={{ display: 'flex', alignItems: 'center', gap: 'var(--step-4)', flexWrap: 'wrap-reverse' }}>
@@ -21,7 +21,7 @@ export default function Home() {
               I build intelligent systems that combine large language models, data pipelines, and real-world applications in finance, education, and analytics.
             </p>
           </div>
-          
+
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: '1 1 200px' }}>
             <Avatar />
           </div>
@@ -33,7 +33,7 @@ export default function Home() {
         <div className="snap-content">
           <h2 className="snap-title">What I Do</h2>
           <p className="snap-desc">
-            I am currently pursuing a degree in Data Science in Economics and Business at National Economics University. My interests lie in building AI systems that can reason, interact with structured data, and support real-world decision making.
+            I have a bachelor's degree in Data Science in Economics and Business at National Economics University. My interests lie in building AI systems that can reason, interact with structured data, and support real-world decision making.
           </p>
           <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
             <Link href="/about" className="card" style={{ width: 'auto', padding: '1rem 2rem' }}>
@@ -68,16 +68,11 @@ export default function Home() {
       {/* 4. Academia Panel */}
       <section className="snap-section bg-variant-1">
         <div className="snap-content">
-           <h2 className="snap-title">Research & Skills</h2>
-           <p className="snap-desc">
+          <h2 className="snap-title">Research & Skills</h2>
+          <p className="snap-desc">
             Academic research papers, laboratory participations, and my core technical stack.
-           </p>
-           <div className="cards-grid">
-            <div className="card">
-              <h3>Research</h3>
-              <p>Academic research into Agentic AI and ML systems.</p>
-              <Link href="/research" className="card-link" />
-            </div>
+          </p>
+          <div className="cards-grid">
             <div className="card">
               <h3>Publications</h3>
               <p>Published academic contributions.</p>
@@ -91,7 +86,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
       {/* 5. Contact Panel */}
       <section className="snap-section bg-variant-2">
         <div className="snap-content">
@@ -100,11 +95,16 @@ export default function Home() {
             Always open to discussing AI, engineering roles, and cool projects.
           </p>
           <div style={{ display: 'flex', gap: '1rem' }}>
-             <Link href="/contact" className="card" style={{ width: 'auto', padding: '1rem 2rem' }}>
+            <Link href="/contact" className="card" style={{ width: 'auto', padding: '1rem 2rem' }}>
               Contact Me
             </Link>
           </div>
         </div>
+      </section>
+
+      {/* 6. Footer Section */}
+      <section className="snap-section bg-variant-3" style={{ height: 'auto', minHeight: 'auto', padding: '4rem 0' }}>
+        <Footer />
       </section>
 
     </main>
