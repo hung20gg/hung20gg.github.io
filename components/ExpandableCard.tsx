@@ -71,7 +71,7 @@ export default function ExpandableCard({ title, subtitle, description, details, 
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1.5rem' }}>
         {tags?.map((tag: string, i: number) => (
           <span key={i} className="card-tag" style={{
-            backgroundColor: 'var(--bg-color)',
+            backgroundColor: 'var(--tag-bg)',
             border: '1px solid var(--border-color)',
             padding: '0.2rem 0.7rem',
             borderRadius: '20px',

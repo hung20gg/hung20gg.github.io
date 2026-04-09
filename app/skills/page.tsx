@@ -1,6 +1,7 @@
 import { getLocalData } from '@/lib/data';
 import PageBackdrop from '@/components/PageBackdrop';
 import Footer from '@/components/Footer';
+import VectorField from '@/components/VectorField';
 
 export default function SkillsPage() {
   const data = getLocalData('skills/data.json', {
@@ -9,30 +10,35 @@ export default function SkillsPage() {
     tools: []
   });
 
-  const renderBadgeList = (items: string[], gradientIndex: number) => {
+  const renderBadgeList = (items: string[], index: number) => {
     if (!items || items.length === 0) return <p className="snap-desc">Provide data in content/skills/data.json.</p>;
     
-    // Pick varying gradients or styles depending on the section index
-    const gradients = [
-      'linear-gradient(90deg, rgba(0, 112, 243, 0.2), transparent)',
-      'linear-gradient(90deg, rgba(56, 189, 248, 0.2), transparent)',
-      'linear-gradient(90deg, rgba(129, 140, 248, 0.2), transparent)'
-    ];
-
     return (
       <div style={{ 
-        display: 'flex', gap: '1rem', flexWrap: 'wrap', 
-        background: gradients[gradientIndex % gradients.length],
-        padding: '2rem', borderRadius: '16px', border: '1px solid var(--border-color)'
+        position: 'relative',
+        display: 'flex', 
+        gap: '1rem', 
+        flexWrap: 'wrap', 
+        padding: '2rem', 
+        borderRadius: '24px', 
+        border: '1px solid var(--border-color)',
+        backgroundColor: 'rgba(0,0,0,0.03)',
+        backdropFilter: 'blur(4px)', // Subtle glass effect for the whole block
+        overflow: 'hidden'
       }}>
         {items.map((item: string, idx: number) => (
-          <span key={idx} style={{ 
-            backgroundColor: 'var(--bg-color)', 
-            padding: '0.5rem 1.25rem', 
-            borderRadius: '8px',
+          <span key={idx} className="card-tag" style={{ 
+            position: 'relative',
+            zIndex: 1,
+            backgroundColor: 'var(--card-bg)', 
+            padding: '0.6rem 1.5rem', 
+            borderRadius: '12px',
             fontSize: '1.1rem',
             fontWeight: 500,
-            boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+            boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid var(--border-color)',
+            transition: 'all 0.3s ease',
           }}>
             {item}
           </span>

@@ -2,9 +2,12 @@ import Link from 'next/link';
 import Avatar from '@/components/Avatar';
 import Footer from '@/components/Footer';
 
+import PageBackdrop from '@/components/PageBackdrop';
+
 export default function Home() {
   return (
     <main className="snap-container">
+      <PageBackdrop seed="home" />
 
       {/* 1. Hero Panel */}
       <section className="snap-section bg-variant-1">

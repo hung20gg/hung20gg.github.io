@@ -1,0 +1,5 @@
+{
+  "languages": ["Python", "JavaScript", "TypeScript", "C++", "SQL", "LaTeX"],
+  "frameworks": ["PyTorch", "TensorFlow", "React", "Next.js", "FastAPI", "Pandas", "HuggingFace"],
+  "tools": ["Docker", "Git", "PostgreSQL", "MongoDB", "Linux", "Weights & Biases", "Jupyter"]
+}

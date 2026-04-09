@@ -1,5 +1,7 @@
 import React from 'react';
+import VectorField from './VectorField';
 
+// ... (configs omitted for brevity in instruction, will keep them in replacement)
 const configs: Record<string, any[]> = {
   about: [
     { type: 'rect', top: '15%', right: '12%', width: '40px', height: '40px', rotate: '15deg' },
@@ -46,14 +48,7 @@ const configs: Record<string, any[]> = {
     { type: 'dot', top: '50%', right: '5%', width: '10px', height: '10px' },
     { type: 'rect', top: '30%', left: '20%', width: '25px', height: '25px', rotate: '35deg' }
   ],
-  skills: [
-    { type: 'rect', top: '45%', right: '10%', width: '45px', height: '45px', rotate: '15deg' },
-    { type: 'dot', top: '80%', left: '15%', width: '16px', height: '16px' },
-    { type: 'rect', top: '60%', right: '20%', width: '30px', height: '30px', rotate: '-15deg' },
-    { type: 'rect', top: '15%', left: '25%', width: '30px', height: '30px', rotate: '-25deg' },
-    { type: 'rect', top: '25%', left: '8%', width: '25px', height: '25px', rotate: '30deg' },
-    { type: 'dot', top: '35%', right: '25%', width: '12px', height: '12px' }
-  ],
+  skills: [], // Reset shapes for skills, handled manually below
   contact: [
     { type: 'rect', top: '15%', left: '15%', width: '35px', height: '35px', rotate: '-45deg' },
     { type: 'rect', top: '40%', right: '10%', width: '45px', height: '45px', rotate: '60deg' },
@@ -62,6 +57,13 @@ const configs: Record<string, any[]> = {
     { type: 'dot', top: '80%', left: '25%', width: '18px', height: '18px' },
     { type: 'dot', top: '55%', left: '5%', width: '12px', height: '12px' },
     { type: 'dot', top: '25%', right: '20%', width: '15px', height: '15px' }
+  ],
+  home: [
+    { type: 'rect', top: '15%', left: '10%', width: '35px', height: '35px', rotate: '15deg' },
+    { type: 'rect', top: '65%', right: '15%', width: '45px', height: '45px', rotate: '-30deg' },
+    { type: 'dot', top: '40%', left: '15%', width: '18px', height: '18px' },
+    { type: 'rect', top: '85%', left: '25%', width: '30px', height: '30px', rotate: '10deg' },
+    { type: 'dot', top: '10%', right: '25%', width: '14px', height: '14px' }
   ]
 };
 
@@ -69,10 +71,14 @@ export default function PageBackdrop({ seed }: { seed: string }) {
   const shapes = configs[seed] || [];
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1, pointerEvents: 'none', overflow: 'hidden' }}>
+
+      {/* Global Vector Field Background */}
+      <VectorField density={35} range={260} />
+
       {shapes.map((shape, i) => {
         const isDot = shape.type === 'dot';
-        
+
         return (
           <div key={i} className="geometry-wrapper" style={{
             position: 'absolute',
@@ -88,7 +94,7 @@ export default function PageBackdrop({ seed }: { seed: string }) {
             <div className={`ripple-ring ripple-geom ripple-geom-1 ${isDot ? 'ripple-dot' : 'ripple-rect-1'}`} />
             <div className={`ripple-ring ripple-geom ripple-geom-2 ${isDot ? 'ripple-dot' : 'ripple-rect-2'}`} />
             <div className={`ripple-ring ripple-geom ripple-geom-3 ${isDot ? 'ripple-dot' : 'ripple-rect-3'}`} />
-            
+
             {/* Main Visual Core */}
             <div className={`geometry-main ${isDot ? 'geom-dot' : 'geom-rect'}`} style={{
               width: '100%',
