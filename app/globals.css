@@ -11,6 +11,19 @@
   --nav-bg: rgba(255, 255, 255, 0.8);
   --accent-glow: rgba(0, 112, 243, 0.1);
   --gradient-name: linear-gradient(90deg, #0070f3, #00c6ff);
+  
+  /* Hover System Defaults */
+  --hover-bg: #38bdf8; /* Default brand blue */
+  --hover-text: #ffffff;
+
+  /* Fluid Typography Scale */
+  --step--1: clamp(0.8rem, 0.05vw + 0.79rem, 0.84rem);
+  --step-0: clamp(1rem, 0.16vw + 0.96rem, 1.13rem);
+  --step-1: clamp(1.25rem, 0.35vw + 1.16rem, 1.51rem);
+  --step-2: clamp(1.56rem, 0.65vw + 1.4rem, 2.02rem);
+  --step-3: clamp(1.95rem, 1.1vw + 1.68rem, 2.72rem);
+  --step-4: clamp(2.44rem, 1.77vw + 2rem, 3.66rem);
+  --step-5: clamp(3.05rem, 2.76vw + 2.36rem, 4.94rem);
 }
 
 [data-theme='dark'] {
@@ -81,6 +94,12 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
 }
 
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+}
+
 .nav-links {
   display: flex;
   gap: 1.5rem;
@@ -112,7 +131,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .theme-toggle:hover {
-  background-color: var(--card-hover-bg);
+  background-color: var(--hover-bg);
+  color: var(--hover-text);
+  border-color: var(--hover-bg);
 }
 
 /* Snap Scroll Architecture */
@@ -131,6 +152,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .snap-section {
   height: 100vh;
+  /* Use dvh for better mobile support if available */
+  height: 100dvh;
   width: 100%;
   scroll-snap-align: start;
   display: flex;
@@ -138,6 +161,21 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   position: relative;
   overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .snap-section {
+    height: auto;
+    min-height: 100dvh;
+    padding: 6rem 0 4rem;
+    scroll-snap-align: none;
+  }
+  
+  .snap-container {
+    scroll-snap-type: none;
+    height: auto;
+    overflow-y: visible;
+  }
 }
 
 .snap-content {
@@ -149,12 +187,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .snap-title {
-  font-size: 3rem;
+  font-size: var(--step-4);
   margin-bottom: 1rem;
 }
 
 .snap-desc {
-  font-size: 1.25rem;
+  font-size: var(--step-1);
   color: var(--text-muted);
   max-width: 800px;
   margin-bottom: 2rem;
@@ -185,22 +223,107 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 2rem;
 }
 
+@media (max-width: 480px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
 .card {
   background-color: var(--card-bg);
   backdrop-filter: blur(5px);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   position: relative;
-  overflow: hidden;
+  /* z-index isolates ripples internally */
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px var(--accent-glow);
-  background-color: var(--card-hover-bg);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--brand-color-glow, var(--accent-glow));
+    background-color: var(--brand-color-bg, var(--card-hover-bg));
+    border-color: var(--brand-color, var(--border-color));
+  }
 }
+
+.card.card-active {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px var(--brand-color-glow, var(--accent-glow));
+  background-color: var(--brand-color-bg, var(--card-hover-bg));
+  border-color: var(--brand-color, var(--border-color));
+}
+
+/* Card Interactivity Tags */
+.card-tag {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .card-tag:hover,
+  .card:hover .card-tag {
+    background-color: var(--brand-color, var(--hover-bg)) !important;
+    color: var(--hover-text) !important;
+    border-color: var(--brand-color, var(--hover-bg)) !important;
+  }
+}
+
+.card.card-active .card-tag {
+  background-color: var(--brand-color, var(--hover-bg)) !important;
+  color: var(--hover-text) !important;
+  border-color: var(--brand-color, var(--hover-bg)) !important;
+}
+
+/* Card Specific Ripples */
+.card-ripple {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  opacity: 0;
+  border: 1.5px solid var(--brand-color, var(--accent-glow));
+  background-color: transparent;
+  /* Auto fallback to glowing background fields for ripples when expanding */
+  background-color: color-mix(in srgb, var(--brand-color, var(--accent-glow)) 10%, transparent);
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1);
+}
+
+@media (hover: hover) {
+  .card:hover .card-ripple-1 {
+    top: -6px; bottom: -6px; left: -6px; right: -6px;
+    opacity: 0.6;
+    border-radius: 16px;
+    transition-delay: 0.05s;
+  }
+
+  .card:hover .card-ripple-2 {
+    top: -14px; bottom: -14px; left: -14px; right: -14px;
+    opacity: 0.25;
+    border-radius: 20px;
+    transition-delay: 0.1s;
+  }
+}
+
+.card.card-active .card-ripple-1 {
+  top: -6px; bottom: -6px; left: -6px; right: -6px;
+  opacity: 0.6;
+  border-radius: 16px;
+  transition-delay: 0.05s;
+}
+
+.card.card-active .card-ripple-2 {
+  top: -14px; bottom: -14px; left: -14px; right: -14px;
+  opacity: 0.25;
+  border-radius: 20px;
+  transition-delay: 0.1s;
+}
+
+.card-ripple-1 { transition-delay: 0.1s; }
+.card-ripple-2 { transition-delay: 0.05s; }
 
 .card h3 {
   font-size: 1.25rem;
@@ -228,9 +351,61 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 4rem;
 }
 
+/* Hamburger Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1010;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+
+/* Mobile Navigation Overlay */
+.mobile-nav-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100vh;
+  background-color: var(--bg-color);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  transform: translateY(-100%);
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+}
+
+.mobile-nav-overlay.open {
+  transform: translateY(0);
+}
+
+.mobile-nav-link {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .nav-links {
     display: none;
+  }
+  
+  .hamburger {
+    display: flex;
   }
 }
 

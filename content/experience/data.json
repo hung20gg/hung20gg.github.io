@@ -1,6 +1,8 @@
 [
   {
     "company": "Viettel Cyber Security",
+    "color": "#ef4444",
+    "url": "https://viettelcybersecurity.com",
     "total_timeline": "Oct 2025 - Present",
     "roles": [
       {
@@ -11,10 +13,9 @@
         "details": "- Built a proxy server for dynamic authentication and authorization for MCP servers integrated with the Dify platform.\n- Served as PIC in designing a Data Agent that can analyze, generate, execute, auto-correct, and optimize CubeJS and Trino SQL queries.\n- Added a post-processing layer to reduce token usage and complexity, covering around 90% of common financial analytics use cases.\n- Used a hybrid public and private LLM approach to improve data privacy.\n- Designed an MCP server for RAG, Trino SQL, and CubeJS queries with a custom data ownership protocol for faster management and scaling.",
         "tags": [
           "MCP",
-          "RAG",
           "Trino SQL",
           "CubeJS",
-          "LLM",
+          "Agentic AI",
           "Dify"
         ]
       }
@@ -22,6 +23,8 @@
   },
   {
     "company": "UPP Global Technology JSC",
+    "color": "#9030DF",
+    "url": "https://www.upp-technology.com/en/",
     "total_timeline": "Jun 2025 - Dec 2025",
     "roles": [
       {
@@ -33,9 +36,7 @@
         "tags": [
           "Machine Learning",
           "ETL",
-          "Rust",
           "AzureML",
-          "LLM",
           "Social Analytics"
         ]
       },
@@ -45,45 +46,60 @@
         "timeline": "Nov 2025 - Dec 2025",
         "description": "Continued AI engineering work in a contract role.",
         "details": "- Worked as a contract AI Engineer in a remote setup.\n- Continued contributing to AI system development and applied machine learning solutions.",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "company": "Viettel Group",
+    "color": "#ef4444",
+    "url": "https://viettel.com.vn",
+    "total_timeline": "Mar 2025 - Oct 2025",
+    "roles": [
+      {
+        "title": "AI Engineer",
+        "employment_type": "Internship",
+        "timeline": "July 2025 - Oct 2025",
+        "description": "Internship at Viettel Information and Technology Center (VIC) during Viettel Digital Talent 2025.",
+        "details": "- Designed a generative solution for BI that automatically collects data and generates visualizations.\n- Used Agentic AI with in-context learning to generate **Highcharts** configurations for visualization, modification, and personalization.\n- Solved around **70%** of questions when using a private LLM.\n- Applied PoC distillation and a customized sampling method from **GPT-4.1-mini** generated samples, gaining **15%** overall performance on **Qwen3-4B-Instruct-2507**.\n- Ranked **Top 30 out of 150+ teams** in an internal ICPC challenge.",
         "tags": [
-          "AI",
-          "Remote",
-          "Contract"
+          "Generative BI",
+          "Agentic AI",
+          "Highcharts",
+          "Fine-tuning"
+        ]
+      },
+      {
+        "title": "DS/AI Intern",
+        "employment_type": "Internship",
+        "timeline": "Mar 2024 - Jul 2024",
+        "description": "Participated in Viettel Digital Talent 2024 program.\nResearched machine learning topics about AI in various topic",
+        "tags": [
+          "Machine Learning",
+          "LLM",
+          "Computer Vision",
+          "Reinforcement Learning"
         ]
       }
     ]
   },
   {
     "company": "Viettel Group",
-    "total_timeline": "Mar 2024 - Oct 2025",
+    "color": "#ef4444",
+    "url": "https://viettel.com.vn",
+    "total_timeline": "Mar 2024 - Jul 2024",
     "roles": [
       {
-        "title": "AI Engineer",
-        "employment_type": "Internship",
-        "timeline": "Apr 2025 - Oct 2025",
-        "description": "Designed generative BI and visualization systems during Viettel Digital Talent 2025.",
-        "details": "- Designed a generative solution for BI that automatically collects data and generates visualizations.\n- Built a PoC using the Actor-Critic sampling method in a Tree-of-Thought reasoning pipeline, improving results from **10%** with Python settings to **30%** with Chart.js settings.\n- Used Agentic AI with in-context learning to generate **Highcharts** configurations for visualization, modification, and personalization.\n- Solved around **70%** of questions when using a private LLM.\n- Applied PoC distillation and a customized sampling method from **GPT-4.1-mini** generated samples, gaining **15%** overall performance on **Qwen3-4B-Instruct-2507**.\n- Ranked **Top 30 out of 150+ teams** in an internal ICPC challenge.",
-        "tags": [
-          "Generative BI",
-          "Agentic AI",
-          "Highcharts",
-          "Chart.js",
-          "Private LLM",
-          "GPT-4.1-mini"
-        ]
-      },
-      {
-        "title": "Viettel Digital Talent",
+        "title": "DS/AI Intern",
         "employment_type": "Internship",
         "timeline": "Mar 2024 - Jul 2024",
-        "description": "Researched machine learning topics and built an LLM plus knowledge graph recommendation pipeline.",
+        "description": "Participated in Viettel Digital Talent 2024 program.\n Researched machine learning topics and built an LLM plus knowledge graph recommendation pipeline.",
         "details": "- Studied and researched machine learning topics including Reinforcement Learning, Quantization, 3D Point Cloud, and LLMs.\n- Developed a pipeline using LLMs with a Knowledge Graph for a recommendation system.\n- Achieved an average **25% to 50%** improvement compared with traditional methods.",
         "tags": [
           "Machine Learning",
-          "LLM",
           "Knowledge Graph",
           "Recommendation System",
-          "Research"
+          "3D Point Cloud"
         ]
       }
     ]

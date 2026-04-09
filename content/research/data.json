@@ -1,6 +1,8 @@
 [
     {
         "lab": "Data and AI Application (DAAI) Lab",
+        "color": "#38bdf8",
+        "url": "https://daai-net.com",
         "roles": [
             {
                 "title": "Research Assistant",
@@ -12,6 +14,7 @@
     },
     {
         "lab": "EdTech Lab",
+        "color": "#ef4444",
         "roles": [
             {
                 "title": "Research Assistant",

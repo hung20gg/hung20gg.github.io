@@ -1,21 +1,20 @@
-# Website Implementation Tasks
+# 🚀 Deployment / Project Config Notice
 
-1. **Setup Core Infrastructure**
-   - Initialize Next.js (App Router) project in this directory without TailwindCSS.
-   - Configure `next.config.mjs` for static site export (GitHub Pages).
-   - Establish CSS variables for a premium, sleek dark-mode design system.
+> [!WARNING]
+> Do not use raw absolute `/` paths (like `src="/avatar.jpg"`) without prefixing it with `/portfolio/`, otherwise the assets will 404 in production. Always rely on Next.js native `<Link>` for navigation.
+> The site has been successfully exported statically with native dark/light variables; please be aware that standard `TailwindCSS` libraries are NOT installed (per user rules). Do all UI scaling via Vanilla CSS.
 
-2. **Implement Global Layout**
-   - Create `app/layout.tsx` enclosing all pages.
-   - Build a responsive `Navbar` and `Footer`.
+---
 
-3. **Develop Homepage (`app/page.tsx`)**
-   - Build the Hero section with a modern title. Apply text gradient **only** to the name "Nguyen Quang Hung".
-   - Add the short about summary.
-   - Build interactive `PortfolioCard` components with subtle micro-animations (hover scale, soft glow) for the portfolio sections.
+### Project Tasks Status Tracker
 
-4. **Scaffold Sub-pages**
-   - Create placeholder structures for `/about`, `/experience`, `/research`, `/projects`, `/publications`, `/skills`, and `/contact`.
-
-5. **CI/CD Pipeline**
-   - Create `.github/workflows/deploy.yml` to automatically build and deploy Next.js static output to GitHub Pages on pushes to `main`.
+- [x] **Setup Core Infrastructure**
+  - **Finished:** Setup core Next.js App Router (TypeScript). Configured CI/CD static output targeting `` routes.
+- [x] **Implement Global Layout**
+  - **Finished:** Integrated `app/layout.tsx` enclosing Navbar, Footer, and globally configured ThemeToggle components inside the root hierarchy.
+- [x] **Develop Interactive Homepage**
+  - **Finished:** Developed dynamic `PageBackdrop.tsx` and `Avatar.tsx` to handle highly complex geometric click-ripple hover interactions natively using calculated CSS layouts.
+- [x] **Scaffold Sub-pages**
+  - **Finished:** Hooked all sub-pages (`/experience`, `/research`, etc.) through a completely decoupled File-based CMS architecture pulling natively from `/content/.../data.json` blobs mapped via `lib/data.ts`.
+- [x] **CI/CD Pipeline**
+  - **Finished:** Established Action YAML runner via standard `actions/configure-pages@v4` targeting Next.js build.

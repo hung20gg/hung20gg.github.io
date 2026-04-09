@@ -8,13 +8,13 @@ export default function Home() {
       
       {/* 1. Hero Panel */}
       <section className="snap-section bg-variant-1">
-        <div className="snap-content" style={{ display: 'flex', alignItems: 'center', gap: '4rem', flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 400px' }}>
-            <h1 style={{ fontSize: '5rem', lineHeight: '1.1', marginBottom: '1rem' }}>
+        <div className="snap-content" style={{ display: 'flex', alignItems: 'center', gap: 'var(--step-4)', flexWrap: 'wrap-reverse' }}>
+          <div style={{ flex: '1 1 300px' }}>
+            <h1 style={{ fontSize: 'var(--step-5)', lineHeight: '1.1', marginBottom: '1rem' }}>
               Hello, I'm <br />
               <span className="name-gradient">Nguyen Quang Hung</span>
             </h1>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '2rem' }}>
+            <h2 style={{ fontSize: 'var(--step-1)', fontWeight: 500, marginBottom: '2rem' }}>
               AI Engineer | Data Scientist | AI Researcher
             </h2>
             <p className="snap-desc">
@@ -22,7 +22,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: '1 1 200px' }}>
             <Avatar />
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function Home() {
       {/* 5. Contact Panel */}
       <section className="snap-section bg-variant-2">
         <div className="snap-content">
-          <h2 className="snap-title" style={{ fontSize: '4rem' }}>Let's Connect</h2>
+          <h2 className="snap-title">Let's Connect</h2>
           <p className="snap-desc">
             Always open to discussing AI, engineering roles, and cool projects.
           </p>
